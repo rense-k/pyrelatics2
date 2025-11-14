@@ -1,6 +1,7 @@
 """
 Some examples on how to use the package
 """
+
 import logging
 
 # pylint: disable=E0401,E0611, invalid-name
