@@ -21,7 +21,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyrelatics2"
 dynamic = ["version"]
-dependencies = ["suds-community>=1.1.2", "colorama"]
+dependencies = [
+    "suds-community>=1.1.2,<1.3.0",
+    "colorama"
+]
 requires-python = ">= 3.10"
 authors = [{ name = "Rense Klinkenberg", email = "r@klinkenberg.ws" }]
 description = "Python package to interact with Relatics webservices"
@@ -46,8 +49,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-development = ["black", "isort", "pylint", "wheel", "twine"]
-tests       = ["parameterized"]
+dev  = ["black", "isort", "pylint", "wheel", "twine"]
+test = ["parameterized"]
 
 [project.urls]
 Homepage = "https://github.com/rense-k/pyrelatics2"

@@ -183,6 +183,14 @@ Logging is available in these modules for debugging purpose: `pyrelatics2.client
 [^1]: Parsing of the raw response can be turned off via the `auto_parse_response=false` argument. In that case the
       method will return the raw response in the form of a `suds.sudsobject.Object`
 
+## Development
+
+To install this package for development, use this command in your venv:
+
+```bash
+pip install -e ".[dev]"
+```
+
 [pypi-package]: https://pypi.org/project/pyrelatics2/
 [pypi-version-badge]: https://img.shields.io/pypi/v/pyrelatics2?label=pypi%20package
 [pypi-status-badge]: https://img.shields.io/pypi/status/pyrelatics2
