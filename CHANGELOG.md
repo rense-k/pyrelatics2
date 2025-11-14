@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added testing for Python 3.13 and 3.14, by which they are now supported.
 
+### Internal
+
+- Remove `requirements.txt` file in favor of `pyproject.toml`.
+
 ## [0.3.1] - 2024-01-30
 
 ### Internal
