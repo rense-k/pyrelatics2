@@ -11,6 +11,7 @@ from platform import platform
 from platform import python_version
 from pprint import pformat
 from tempfile import gettempdir
+from typing import Literal
 from typing import TypeAlias
 from typing import TypedDict
 from typing import overload
@@ -285,8 +286,9 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
-        auto_parse_response: bool = True,
+        auto_parse_response: Literal[True],
     ) -> ExportResult: ...
 
     @overload
@@ -294,8 +296,9 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
-        auto_parse_response: bool = False,
+        auto_parse_response: Literal[False],
     ) -> SudsObject: ...
 
     @overload
@@ -303,6 +306,7 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
     ) -> ExportResult: ...
 
@@ -310,6 +314,7 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
         auto_parse_response: bool = True,
     ) -> ExportResult | SudsObject:
@@ -422,10 +427,11 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-        auto_parse_response: bool = True,
+        auto_parse_response: Literal[True],
     ) -> ImportResult: ...
 
     @overload
@@ -433,10 +439,11 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-        auto_parse_response: bool = False,
+        auto_parse_response: Literal[False],
     ) -> SudsObject: ...
 
     @overload
@@ -444,6 +451,7 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
@@ -453,6 +461,7 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
