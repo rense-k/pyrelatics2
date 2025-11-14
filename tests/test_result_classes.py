@@ -14,7 +14,7 @@ from pyrelatics2.result_classes import ImportMessage
 from pyrelatics2.result_classes import ImportMessageStatus
 from pyrelatics2.result_classes import ImportResult
 
-# pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,too-few-public-methods
+# pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,too-few-public-methods,too-many-positional-arguments
 
 logging.getLogger("pyrelatics2.result_classes").setLevel(logging.ERROR)
 
