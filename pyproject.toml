@@ -30,7 +30,7 @@ authors = [{ name = "Rense Klinkenberg", email = "r@klinkenberg.ws" }]
 description = "Python package to interact with Relatics webservices"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-keywords = ["Relatics", "webservice", "soap-client", "oauth2"]
+keywords = ["Relatics", "Relatics v5", "webservice", "soap-client", "oauth2"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
