@@ -7,3 +7,5 @@
 acd18b116a63b2afeb29db2e62250bb7a7975196
 # Apply isort
 5430e44912d6ac6a9b4e5a08783b45152b07addf
+# Apply black formatting
+eac3e92f0daeaaaf71bacd43edc784ad016be9f3
