@@ -1,6 +1,7 @@
 """
 Testing the "result_classes.py" module
 """
+
 import logging
 import unittest
 

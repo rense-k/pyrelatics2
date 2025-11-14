@@ -1,6 +1,7 @@
 """
 Testing the "client.py" module
 """
+
 import os
 import unittest
 from uuid import UUID

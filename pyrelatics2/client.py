@@ -287,8 +287,7 @@ class RelaticsWebservices:
         parameters: ParametersOrNone = None,
         authentication: None | str | ClientCredential = None,
         auto_parse_response: bool = True,
-    ) -> ExportResult:
-        ...
+    ) -> ExportResult: ...
 
     @overload
     def get_result(
@@ -297,8 +296,7 @@ class RelaticsWebservices:
         parameters: ParametersOrNone = None,
         authentication: None | str | ClientCredential = None,
         auto_parse_response: bool = False,
-    ) -> SudsObject:
-        ...
+    ) -> SudsObject: ...
 
     @overload
     def get_result(
@@ -306,8 +304,7 @@ class RelaticsWebservices:
         operation_name: str,
         parameters: ParametersOrNone = None,
         authentication: None | str | ClientCredential = None,
-    ) -> ExportResult:
-        ...
+    ) -> ExportResult: ...
 
     def get_result(
         self,
@@ -429,8 +426,7 @@ class RelaticsWebservices:
         file_name: None | str = None,
         documents: None | list[str] = None,
         auto_parse_response: bool = True,
-    ) -> ImportResult:
-        ...
+    ) -> ImportResult: ...
 
     @overload
     def run_import(
@@ -441,8 +437,7 @@ class RelaticsWebservices:
         file_name: None | str = None,
         documents: None | list[str] = None,
         auto_parse_response: bool = False,
-    ) -> SudsObject:
-        ...
+    ) -> SudsObject: ...
 
     @overload
     def run_import(
@@ -452,8 +447,7 @@ class RelaticsWebservices:
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-    ) -> ImportResult:
-        ...
+    ) -> ImportResult: ...
 
     def run_import(
         self,
