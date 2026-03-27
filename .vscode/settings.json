@@ -41,7 +41,9 @@
     "markdown.occurrencesHighlight.enabled": false,
     "markdownlint.config": {
         "default": true,
-        "no-duplicate-heading": {"siblings_only": true}
+        "no-duplicate-heading": {
+            "siblings_only": true
+        }
     },
     "editor.foldingImportsByDefault": true,
     "[toml]": {
@@ -59,5 +61,7 @@
     "evenBetterToml.formatter.indentEntries": false,
     "evenBetterToml.formatter.indentTables": false,
     "evenBetterToml.formatter.indentString": "    ",
-
+    "editor.formatOnSave": true,
+    "isort.interpreter": [],
+    "black-formatter.interpreter": [],
 }
