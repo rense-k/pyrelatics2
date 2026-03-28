@@ -147,7 +147,8 @@ class TestAddParametersPlugin(unittest.TestCase):
         AddParametersPlugin({"a": "b", "c": "d"}).marshalled(ctx)
 
         # Navigate: Envelope -> Body -> GetResult
-        get_result = ctx.envelope.getChild("Body")[0]
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
 
         # Outer <Parameters> must be the first (and only) child of <GetResult>
         outer_params = get_result[0]
@@ -171,14 +172,16 @@ class TestAddParametersPlugin(unittest.TestCase):
         ctx = self._make_context()
         AddParametersPlugin(None).marshalled(ctx)
 
-        get_result = ctx.envelope.getChild("Body")[0]
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
         self.assertEqual(get_result.getChildren(), [], "Parameters element should not be present when parameters=None")
 
     def test_parameters_empty_dict_omits_parameters_block(self):
         ctx = self._make_context()
         AddParametersPlugin({}).marshalled(ctx)
 
-        get_result = ctx.envelope.getChild("Body")[0]
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
         self.assertEqual(get_result.getChildren(), [], "Parameters element should not be present when parameters={}")
 
 
