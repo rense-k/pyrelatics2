@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `requirements.txt` file again for easier development (`pip install -r requirements.txt`).
 - Added some VS Code settings for easier development onboarding.
-- Added zizmor workflow for GitHub actions.
+- Added zizmor workflow for GitHub Actions.
 
 ## [0.3.2] - 2025-11-15
 
