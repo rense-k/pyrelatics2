@@ -183,7 +183,7 @@ class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
             # Try to get "Parameters" element, or built when missing
             try:
                 params = context.envelope.getChild("Body")[0].getChild("Parameters")[0]
-            except TypeError:
+            except (TypeError, IndexError, AttributeError):
                 log.info("Adding parameters to SOAP request")
                 root = context.envelope.getChild("Body")[0]
                 root_prefix = root.findPrefix("http://www.relatics.com/")
