@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.3] - 2026-##-##
 
+### Fixed
+
+- Reverted commit `11ab6f1` so that parameters are working again (fixes #32).
+
 ### Internal
 
 - Added `requirements.txt` file again for easier development (`pip install -r requirements.txt`).
