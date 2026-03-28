@@ -281,6 +281,23 @@ class RelaticsWebservices:
 
         return auth
 
+    def _generate_client(self, authentication: None | str | ClientCredential = None) -> Client:
+        """Generate a suds client and set the user-agent and OAuth2 headers"""
+
+        # Create the client
+        client = Client(self.wsdl_url)
+
+        # Define header
+        headers = {"User-Agent": self.user_agent}
+
+        # Add auth header for OAuth2 requests
+        if isinstance(authentication, ClientCredential):
+            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
+
+        client.set_options(headers=headers)
+
+        return client
+
     @overload
     def get_result(
         self,
@@ -337,18 +354,11 @@ class RelaticsWebservices:
         # Basic check of mandatory arguments
         self._check_operation_name(operation_name=operation_name)
 
-        headers = {"User-Agent": self.user_agent}
-        client = Client(self.wsdl_url)
+        client = self._generate_client(authentication)
 
         # Add parameter plugin to handle parameters, when those are set
         if parameters is not None:
             client.set_options(plugins=[AddParametersPlugin(parameters)])
-
-        # Add auth header for OAuth2 requests
-        if isinstance(authentication, ClientCredential):
-            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
-
-        client.set_options(headers=headers)
 
         # Any parameters will be handled by the AddParametersPlugin, so don't pass them here
         # GetResult(xs:string Operation, Identification Identification, Parameters Parameters,
@@ -512,10 +522,7 @@ class RelaticsWebservices:
             if len({os.path.split(path)[1] for path in documents}) != len(documents):
                 raise ValueError("Duplicate filenames in document list.")
 
-        headers = {"User-Agent": self.user_agent}
         file_extension = None
-
-        client = Client(self.wsdl_url)
 
         # Prepare the data part
         if isinstance(data, list):
@@ -567,11 +574,7 @@ class RelaticsWebservices:
                 with open(data, "rb") as data_file:
                     data_str = b64encode(data_file.read()).decode("utf-8")
 
-        # Add auth header for OAuth2 requests
-        if isinstance(authentication, ClientCredential):
-            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
-
-        client.set_options(headers=headers)
+        client = self._generate_client(authentication)
 
         # Import(xs:string Operation, Identification Identification, Authentication Authentication, xs:string Filename,
         #        xs:string Data)
