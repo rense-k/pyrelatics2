@@ -150,6 +150,7 @@ relatics_webservice = RelaticsWebservices(SAMPLE_COMPANY, SAMPLE_WORKSPACE_ID)
 iii = relatics_webservice.get_result(
     operation_name="searchActiesEntrycode",
     parameters={"search": "Excel"},
+    # parameters={},
     authentication="A7C5AE4058E9EA3C9191B9EB68A54C45",
 )
 print(f"Bool evaluation: {bool(iii)}")
