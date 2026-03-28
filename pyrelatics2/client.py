@@ -169,7 +169,7 @@ class ClientCredential:
 class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
     """
     Plugin for Suds Client to add parameters to the request before sending to Relatics. Because parameters use
-    attributes, they can not be defined though the default mechanisms within Suds.
+    attributes, they can not be defined through the default mechanisms within Suds.
 
     Args:
         parameters : Dictionary with the parameters
