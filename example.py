@@ -30,13 +30,13 @@ cc = ClientCredential(
 relatics_webservice = RelaticsWebservices(SAMPLE_COMPANY, SAMPLE_WORKSPACE_ID)
 
 # ✅ DONE
-aaa = relatics_webservice.get_result(
-    operation_name="getActiesEntrycode",
-    parameters={"param1": "Hallo123_EntryCode"},
-    authentication="B7CAA7A9F27BCA0B6586A607DEDE31F0",
-)
-print(f"Bool evaluation: {bool(aaa)}")
-print(aaa)
+# aaa = relatics_webservice.get_result(
+#     operation_name="getActiesEntrycode",
+#     parameters={"param1": "Hallo123_EntryCode"},
+#     authentication="B7CAA7A9F27BCA0B6586A607DEDE31F0",
+# )
+# print(f"Bool evaluation: {bool(aaa)}")
+# print(aaa)
 
 
 # ✅ DONE
@@ -145,3 +145,12 @@ print(aaa)
 # print("\n\n############################################   RESULT   ############################################")
 # print(f"Bool evaluation: {bool(hhh)}")
 # print(hhh)
+
+# ✅ DONE
+iii = relatics_webservice.get_result(
+    operation_name="searchActiesEntrycode",
+    parameters={"search": "Excel"},
+    authentication="A7C5AE4058E9EA3C9191B9EB68A54C45",
+)
+print(f"Bool evaluation: {bool(iii)}")
+print(iii)
