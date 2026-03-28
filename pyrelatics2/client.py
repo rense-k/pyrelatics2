@@ -179,7 +179,7 @@ class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
         self.parameters = parameters
 
     def marshalled(self, context: MessageContext):
-        if self.parameters is not None:
+        if self.parameters:  # So not None nor an empty dict
             # Try to get "Parameters" element, or built when missing
             try:
                 params = context.envelope.getChild("Body")[0].getChild("Parameters")[0]
@@ -356,9 +356,8 @@ class RelaticsWebservices:
 
         client = self._generate_client(authentication)
 
-        # Add parameter plugin to handle parameters, when those are set
-        if parameters is not None:
-            client.set_options(plugins=[AddParametersPlugin(parameters)])
+        # Add parameter plugin to handle any possible parameters
+        client.set_options(plugins=[AddParametersPlugin(parameters)])
 
         # Any parameters will be handled by the AddParametersPlugin, so don't pass them here
         # GetResult(xs:string Operation, Identification Identification, Parameters Parameters,
