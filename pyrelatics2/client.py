@@ -19,6 +19,8 @@ from uuid import UUID
 from zipfile import ZipFile
 
 from suds.client import Client
+from suds.plugin import MessageContext
+from suds.plugin import MessagePlugin
 from suds.sax.document import Document
 from suds.sax.element import Element
 from suds.sudsobject import Object as SudsObject
@@ -164,6 +166,51 @@ class ClientCredential:
         )
 
 
+class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
+    """
+    Plugin for Suds Client to add parameters to the request before sending to Relatics. Because parameters use
+    attributes, they can not be defined though the default mechanisms within Suds.
+
+    Args:
+        parameters : Dictionary with the parameters
+    """
+
+    def __init__(self, parameters: ParametersOrNone):
+        self.parameters = parameters
+
+    def marshalled(self, context: MessageContext):
+        if self.parameters is not None:
+            # Try to get "Parameters" element, or built when missing
+            try:
+                params = context.envelope.getChild("Body")[0].getChild("Parameters")[0]
+            except TypeError:
+                log.info("Adding parameters to SOAP request")
+                root = context.envelope.getChild("Body")[0]
+                root_prefix = root.findPrefix("http://www.relatics.com/")
+
+                p_1 = Element("Parameters", parent=root)
+                p_1.setPrefix(root_prefix)
+                root.append(p_1)
+
+                p_2 = Element("Parameters", parent=p_1)
+                p_2.setPrefix(root_prefix)
+                p_1.append(p_2)
+
+                params = context.envelope.getChild("Body")[0].getChild("Parameters")[0]
+
+            prefix = params.findPrefix("http://www.relatics.com/")
+
+            # Add the parameters
+            for param_name, param_value in self.parameters.items():
+                elem = Element("Parameter", parent=params)
+                elem.setPrefix(prefix)
+                elem.set(name="Name", value=param_name)
+                elem.set(name="Value", value=param_value)
+                params.append(elem)
+
+        log.debug("Final SOAP envelope: \n%s", context.envelope.str())
+
+
 class RelaticsWebservices:
     """
     Class to communicate with Relatics webservices
@@ -293,28 +340,25 @@ class RelaticsWebservices:
         headers = {"User-Agent": self.user_agent}
         client = Client(self.wsdl_url)
 
+        # Add parameter plugin to handle parameters, when those are set
+        if parameters is not None:
+            client.set_options(plugins=[AddParametersPlugin(parameters)])
+
         # Add auth header for OAuth2 requests
         if isinstance(authentication, ClientCredential):
             headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
 
         client.set_options(headers=headers)
 
-        # Convert the given params to a structure compatible with the soap client
-        params = (
-            None
-            if parameters is None
-            else {"Parameters": [{"Parameter": {f"_{k}": v for k, v in parameters.items()}}]}
-        )
-
+        # Any parameters will be handled by the AddParametersPlugin, so don't pass them here
         # GetResult(xs:string Operation, Identification Identification, Parameters Parameters,
         #           Authentication Authentication)
         suds_response = client.service.GetResult(
             Operation=operation_name,
             Identification=self.identification,
-            Parameters=params,
+            Parameters=None,
             Authentication=self._generate_auth_parameter(authentication),
         )
-        log.debug("Send SOAP envelop: \n%s", str(client.messages["tx"]))
 
         if auto_parse_response:
             # Parse the raw response into something useful
