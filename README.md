@@ -2,9 +2,9 @@
 
 [![PyPI Python version][pypi-python-version-badge]][pypi-package] [![PyPI version][pypi-version-badge]][pypi-package] [![PyPI status][pypi-status-badge]][pypi-package] [![Apache-2.0 license][license-badge]][license] [![GitHub branch check state][github-workflow-status-pylint-dev-badge]][github-link] [![GitHub branch check state][github-workflow-status-unittest-dev-badge]][github-link]
 
-Python package to interact with Relatics webservices.
+Python package to interact with Relatics v5 webservices.
 
-This package allows you to interact with Relatics webservices in two ways:
+This package allows you to interact with Relatics v5 webservices in two ways:
 
 * Get data from a "Servers for providing data" webservice.
 * Submit data to a "Servers for receiving data" webservice.
