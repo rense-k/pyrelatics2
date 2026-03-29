@@ -21,6 +21,10 @@ def suds_get(obj: SudsObject | None, *paths: str) -> SudsObject | str | None | l
 
     current = obj
 
+    # For backward compatibility when `*paths` could be `list[str]`
+    if len(paths) == 1 and isinstance(paths[0], list):
+        paths = tuple(paths[0])
+
     # Iterate through the the path
     for attribute_name in paths:
         current = getattr(current, attribute_name, None)
