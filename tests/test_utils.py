@@ -39,6 +39,10 @@ class TestSudsGet(unittest.TestCase):
         result = suds_get(None, "title")
         self.assertIsNone(result)
 
+    def test_obj_none_multiple_path_returns_none(self):
+        result = suds_get(None, "child", "name")
+        self.assertIsNone(result)
+
     def test_obj_none_list_path_returns_none(self):
         result = suds_get(None, ["child", "name"])
         self.assertIsNone(result)
@@ -74,20 +78,41 @@ class TestSudsGet(unittest.TestCase):
         result = suds_get(self.obj, ["title"])
         self.assertEqual(result, "root_title")
 
+    def test_str_path_single_element_returns_value(self):
+        result = suds_get(self.obj, "title")
+        self.assertEqual(result, "root_title")
+
     def test_list_path_nested_returns_value(self):
         result = suds_get(self.obj, ["child", "name"])
+        self.assertEqual(result, "child_name")
+
+    def test_str_path_nested_returns_value(self):
+        result = suds_get(self.obj, "child", "name")
         self.assertEqual(result, "child_name")
 
     def test_list_path_missing_intermediate_returns_none(self):
         result = suds_get(self.obj, ["nonexistent", "name"])
         self.assertIsNone(result)
 
+    def test_str_path_missing_intermediate_returns_none(self):
+        result = suds_get(self.obj, "nonexistent", "name")
+        self.assertIsNone(result)
+
     def test_list_path_missing_leaf_returns_none(self):
         result = suds_get(self.obj, ["child", "nonexistent"])
         self.assertIsNone(result)
 
+    def test_str_path_missing_leaf_returns_none(self):
+        result = suds_get(self.obj, "child", "nonexistent")
+        self.assertIsNone(result)
+
     def test_list_path_text_value_converted_to_str(self):
         result = suds_get(self.obj, ["child", "text_value"])
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, "hello from suds text")
+
+    def test_str_path_text_value_converted_to_str_2(self):
+        result = suds_get(self.obj, "child", "text_value")
         self.assertIsInstance(result, str)
         self.assertEqual(result, "hello from suds text")
 
