@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added some VS Code settings for easier development onboarding.
 - Added zizmor workflow for GitHub Actions.
 - Added OpenSSF Scorecard workflow for GitHub Actions.
+- Added security policy.
 
 ## [0.3.2] - 2025-11-15
 
