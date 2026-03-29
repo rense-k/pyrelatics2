@@ -143,6 +143,10 @@ class TestSudsGetAsList(unittest.TestCase):
     # obj is None
     # ------------------------------------------------------------------
 
+    def test_obj_none_returns_empty_list_list(self):
+        result = suds_get_as_list(None, ["title"])
+        self.assertEqual(result, [])
+
     def test_obj_none_returns_empty_list(self):
         result = suds_get_as_list(None, "title")
         self.assertEqual(result, [])
@@ -150,6 +154,10 @@ class TestSudsGetAsList(unittest.TestCase):
     # ------------------------------------------------------------------
     # missing attribute
     # ------------------------------------------------------------------
+
+    def test_missing_attribute_returns_empty_list_list(self):
+        result = suds_get_as_list(self.obj, ["nonexistent"])
+        self.assertEqual(result, [])
 
     def test_missing_attribute_returns_empty_list(self):
         result = suds_get_as_list(self.obj, "nonexistent")
@@ -159,15 +167,30 @@ class TestSudsGetAsList(unittest.TestCase):
     # single (non-list) value is wrapped in a list
     # ------------------------------------------------------------------
 
+    def test_str_value_wrapped_in_list_list(self):
+        result = suds_get_as_list(self.obj, ["title"])
+        self.assertEqual(result, ["root_title"])
+
     def test_str_value_wrapped_in_list(self):
         result = suds_get_as_list(self.obj, "title")
         self.assertEqual(result, ["root_title"])
+
+    def test_suds_object_wrapped_in_list_list(self):
+        result = suds_get_as_list(self.obj, ["single_item"])
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 1)
+        self.assertIs(result[0], self.obj.single_item)
 
     def test_suds_object_wrapped_in_list(self):
         result = suds_get_as_list(self.obj, "single_item")
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 1)
         self.assertIs(result[0], self.obj.single_item)
+
+    def test_text_value_wrapped_in_list_as_str_list(self):
+        result = suds_get_as_list(self.child, ["text_value"])
+        self.assertEqual(result, ["hello from suds text"])
+        self.assertIsInstance(result[0], str)
 
     def test_text_value_wrapped_in_list_as_str(self):
         result = suds_get_as_list(self.child, "text_value")
@@ -178,6 +201,11 @@ class TestSudsGetAsList(unittest.TestCase):
     # existing list is returned as-is
     # ------------------------------------------------------------------
 
+    def test_list_value_returned_unchanged_list(self):
+        result = suds_get_as_list(self.obj, ["multi_item"])
+        self.assertIs(result, self.obj.multi_item)
+        self.assertEqual(len(result), 2)
+
     def test_list_value_returned_unchanged(self):
         result = suds_get_as_list(self.obj, "multi_item")
         self.assertIs(result, self.obj.multi_item)
@@ -187,9 +215,17 @@ class TestSudsGetAsList(unittest.TestCase):
     # nested path
     # ------------------------------------------------------------------
 
+    def test_nested_path_returns_wrapped_value_list(self):
+        result = suds_get_as_list(self.obj, ["single_item"])
+        self.assertIsInstance(result, list)
+
     def test_nested_path_returns_wrapped_value(self):
         result = suds_get_as_list(self.obj, "single_item")
         self.assertIsInstance(result, list)
+
+    def test_missing_nested_path_returns_empty_list_list(self):
+        result = suds_get_as_list(self.obj, ["nonexistent", "name"])
+        self.assertEqual(result, [])
 
     def test_missing_nested_path_returns_empty_list(self):
         result = suds_get_as_list(self.obj, "nonexistent", "name")
@@ -211,6 +247,10 @@ class TestSudsGetAsStr(unittest.TestCase):
     # obj is None
     # ------------------------------------------------------------------
 
+    def test_obj_none_returns_none_list(self):
+        result = suds_get_as_str(None, ["title"])
+        self.assertIsNone(result)
+
     def test_obj_none_returns_none(self):
         result = suds_get_as_str(None, "title")
         self.assertIsNone(result)
@@ -219,6 +259,10 @@ class TestSudsGetAsStr(unittest.TestCase):
     # missing attribute
     # ------------------------------------------------------------------
 
+    def test_missing_attribute_returns_none_list(self):
+        result = suds_get_as_str(self.obj, ["nonexistent"])
+        self.assertIsNone(result)
+
     def test_missing_attribute_returns_none(self):
         result = suds_get_as_str(self.obj, "nonexistent")
         self.assertIsNone(result)
@@ -226,6 +270,11 @@ class TestSudsGetAsStr(unittest.TestCase):
     # ------------------------------------------------------------------
     # str value is returned as-is
     # ------------------------------------------------------------------
+
+    def test_str_value_returned_unchanged_list(self):
+        result = suds_get_as_str(self.obj, ["title"])
+        self.assertEqual(result, "root_title")
+        self.assertIsInstance(result, str)
 
     def test_str_value_returned_unchanged(self):
         result = suds_get_as_str(self.obj, "title")
@@ -236,6 +285,11 @@ class TestSudsGetAsStr(unittest.TestCase):
     # non-str value is cast to str
     # ------------------------------------------------------------------
 
+    def test_int_value_cast_to_str_list(self):
+        result = suds_get_as_str(self.obj, ["count"])
+        self.assertEqual(result, "42")
+        self.assertIsInstance(result, str)
+
     def test_int_value_cast_to_str(self):
         result = suds_get_as_str(self.obj, "count")
         self.assertEqual(result, "42")
@@ -244,6 +298,11 @@ class TestSudsGetAsStr(unittest.TestCase):
     # ------------------------------------------------------------------
     # Text value is converted to str
     # ------------------------------------------------------------------
+
+    def test_text_value_converted_to_str_list(self):
+        result = suds_get_as_str(self.child, ["text_value"])
+        self.assertEqual(result, "hello from suds text")
+        self.assertIsInstance(result, str)
 
     def test_text_value_converted_to_str(self):
         result = suds_get_as_str(self.child, "text_value")
@@ -254,9 +313,17 @@ class TestSudsGetAsStr(unittest.TestCase):
     # nested path
     # ------------------------------------------------------------------
 
+    def test_nested_path_returns_value_list(self):
+        result = suds_get_as_str(self.obj, ["child", "name"])
+        self.assertEqual(result, "child_name")
+
     def test_nested_path_returns_value(self):
         result = suds_get_as_str(self.obj, "child", "name")
         self.assertEqual(result, "child_name")
+
+    def test_nested_missing_path_returns_none_list(self):
+        result = suds_get_as_str(self.obj, ["nonexistent", "name"])
+        self.assertIsNone(result)
 
     def test_nested_missing_path_returns_none(self):
         result = suds_get_as_str(self.obj, "nonexistent", "name")
