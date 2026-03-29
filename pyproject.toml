@@ -27,7 +27,7 @@ dependencies = [
 ]
 requires-python = ">= 3.10"
 authors = [{ name = "Rense Klinkenberg", email = "r@klinkenberg.ws" }]
-description = "Python package to interact with Relatics webservices"
+description = "Python package to interact with Relatics v5 webservices"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 keywords = ["Relatics", "Relatics v5", "webservice", "soap-client", "oauth2"]
