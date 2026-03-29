@@ -63,13 +63,11 @@ def suds_get_as_list(obj: SudsObject | None, *paths: str) -> list[SudsObject] | 
 
 
 @overload
-def suds_get_as_str(obj: SudsObject, *paths: str) -> str | None:
-    ...
+def suds_get_as_str(obj: SudsObject, *paths: str) -> str | None: ...
 
 
 @overload
-def suds_get_as_str(obj: None, *paths: str) -> None:
-    ...
+def suds_get_as_str(obj: None, *paths: str) -> None: ...
 
 
 def suds_get_as_str(obj: SudsObject | None, *paths: str) -> str | None:

@@ -11,6 +11,7 @@ from platform import platform
 from platform import python_version
 from pprint import pformat
 from tempfile import gettempdir
+from typing import Literal
 from typing import TypeAlias
 from typing import TypedDict
 from typing import overload
@@ -168,7 +169,7 @@ class ClientCredential:
 class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
     """
     Plugin for Suds Client to add parameters to the request before sending to Relatics. Because parameters use
-    attributes, they can not be defined though the default mechanisms within Suds.
+    attributes, they can not be defined through the default mechanisms within Suds.
 
     Args:
         parameters : Dictionary with the parameters
@@ -178,11 +179,11 @@ class AddParametersPlugin(MessagePlugin):  # pylint: disable=R0903
         self.parameters = parameters
 
     def marshalled(self, context: MessageContext):
-        if self.parameters is not None:
+        if self.parameters:  # So not None nor an empty dict
             # Try to get "Parameters" element, or built when missing
             try:
                 params = context.envelope.getChild("Body")[0].getChild("Parameters")[0]
-            except TypeError:
+            except (TypeError, IndexError, AttributeError):
                 log.info("Adding parameters to SOAP request")
                 root = context.envelope.getChild("Body")[0]
                 root_prefix = root.findPrefix("http://www.relatics.com/")
@@ -280,39 +281,57 @@ class RelaticsWebservices:
 
         return auth
 
-    @overload
-    def get_result(
-        self,
-        operation_name: str,
-        parameters: ParametersOrNone = None,
-        authentication: None | str | ClientCredential = None,
-        auto_parse_response: bool = True,
-    ) -> ExportResult:
-        ...
+    def _generate_client(self, authentication: None | str | ClientCredential = None) -> Client:
+        """Generate a suds client and set the user-agent and OAuth2 headers"""
+
+        # Create the client
+        client = Client(self.wsdl_url)
+
+        # Define header
+        headers = {"User-Agent": self.user_agent}
+
+        # Add auth header for OAuth2 requests
+        if isinstance(authentication, ClientCredential):
+            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
+
+        client.set_options(headers=headers)
+
+        return client
 
     @overload
     def get_result(
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
-        auto_parse_response: bool = False,
-    ) -> SudsObject:
-        ...
+        auto_parse_response: Literal[True],
+    ) -> ExportResult: ...
 
     @overload
     def get_result(
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
-    ) -> ExportResult:
-        ...
+        auto_parse_response: Literal[False],
+    ) -> SudsObject: ...
+
+    @overload
+    def get_result(
+        self,
+        operation_name: str,
+        parameters: ParametersOrNone = None,
+        *,
+        authentication: None | str | ClientCredential = None,
+    ) -> ExportResult: ...
 
     def get_result(
         self,
         operation_name: str,
         parameters: ParametersOrNone = None,
+        *,
         authentication: None | str | ClientCredential = None,
         auto_parse_response: bool = True,
     ) -> ExportResult | SudsObject:
@@ -335,18 +354,10 @@ class RelaticsWebservices:
         # Basic check of mandatory arguments
         self._check_operation_name(operation_name=operation_name)
 
-        headers = {"User-Agent": self.user_agent}
-        client = Client(self.wsdl_url)
+        client = self._generate_client(authentication)
 
-        # Add parameter plugin to handle parameters, when those are set
-        if parameters is not None:
-            client.set_options(plugins=[AddParametersPlugin(parameters)])
-
-        # Add auth header for OAuth2 requests
-        if isinstance(authentication, ClientCredential):
-            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
-
-        client.set_options(headers=headers)
+        # Add parameter plugin to handle any possible parameters
+        client.set_options(plugins=[AddParametersPlugin(parameters)])
 
         # Any parameters will be handled by the AddParametersPlugin, so don't pass them here
         # GetResult(xs:string Operation, Identification Identification, Parameters Parameters,
@@ -425,40 +436,41 @@ class RelaticsWebservices:
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-        auto_parse_response: bool = True,
-    ) -> ImportResult:
-        ...
+        auto_parse_response: Literal[True],
+    ) -> ImportResult: ...
 
     @overload
     def run_import(
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-        auto_parse_response: bool = False,
-    ) -> SudsObject:
-        ...
+        auto_parse_response: Literal[False],
+    ) -> SudsObject: ...
 
     @overload
     def run_import(
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
-    ) -> ImportResult:
-        ...
+    ) -> ImportResult: ...
 
     def run_import(
         self,
         operation_name: str,
         data: str | list[dict[str, str]],
+        *,
         authentication: None | str | ClientCredential = None,
         file_name: None | str = None,
         documents: None | list[str] = None,
@@ -509,10 +521,7 @@ class RelaticsWebservices:
             if len({os.path.split(path)[1] for path in documents}) != len(documents):
                 raise ValueError("Duplicate filenames in document list.")
 
-        headers = {"User-Agent": self.user_agent}
         file_extension = None
-
-        client = Client(self.wsdl_url)
 
         # Prepare the data part
         if isinstance(data, list):
@@ -564,11 +573,7 @@ class RelaticsWebservices:
                 with open(data, "rb") as data_file:
                     data_str = b64encode(data_file.read()).decode("utf-8")
 
-        # Add auth header for OAuth2 requests
-        if isinstance(authentication, ClientCredential):
-            headers["Authorization"] = f"Bearer {authentication.get_token(self.hostname)}"
-
-        client.set_options(headers=headers)
+        client = self._generate_client(authentication)
 
         # Import(xs:string Operation, Identification Identification, Authentication Authentication, xs:string Filename,
         #        xs:string Data)

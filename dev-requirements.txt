@@ -1,7 +1,0 @@
-black
-isort
-pylint
-wheel
-twine
-parameterized
-build
