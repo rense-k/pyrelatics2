@@ -1,15 +1,17 @@
 """
 Testing the "client.py" module
 """
+
 import os
 import unittest
 from uuid import UUID
 
 from parameterized import parameterized
+from suds.plugin import MessageContext
+from suds.sax.element import Element
 
-from pyrelatics2.client import USER_AGENT
-from pyrelatics2.client import RelaticsWebservices
-from pyrelatics2.client import is_valid_uuid
+from pyrelatics2.client import (USER_AGENT, AddParametersPlugin,
+                                RelaticsWebservices, is_valid_uuid)
 
 # pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,too-few-public-methods
 
@@ -125,6 +127,73 @@ class TestRelaticsWebservices(unittest.TestCase):
                 documents=[filename, os.path.join("pyramid-from-bagpipe", filename)],
             )
         self.assertEqual(str(context.exception), "Duplicate filenames in document list.")
+
+
+class TestAddParametersPlugin(unittest.TestCase):
+    NS_RELATICS = "http://www.relatics.com/"
+    NS_SOAP = "http://schemas.xmlsoap.org/soap/envelope/"
+
+    def _make_context(self) -> MessageContext:
+        """Build a minimal fake SOAP envelope wrapped in a MessageContext."""
+        envelope = Element("Envelope")
+        envelope.addPrefix("soapenv", self.NS_SOAP)
+        envelope.addPrefix("rel", self.NS_RELATICS)
+        envelope.setPrefix("soapenv")
+
+        body = Element("Body", parent=envelope)
+        body.setPrefix("soapenv")
+        envelope.append(body)
+
+        get_result = Element("GetResult", parent=body)
+        get_result.addPrefix("rel", self.NS_RELATICS)
+        get_result.setPrefix("rel")
+        body.append(get_result)
+
+        ctx = MessageContext()
+        ctx.envelope = envelope
+        return ctx
+
+    def test_parameters_are_injected(self):
+        ctx = self._make_context()
+        AddParametersPlugin({"a": "b", "c": "d"}).marshalled(ctx)
+
+        # Navigate: Envelope -> Body -> GetResult
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
+
+        # Outer <Parameters> must be the first (and only) child of <GetResult>
+        outer_params = get_result[0]
+        self.assertEqual(outer_params.name, "Parameters", "Outer Parameters element missing")
+
+        # Inner <Parameters> must be a child of the outer one
+        inner_params = outer_params[0]
+        self.assertEqual(inner_params.name, "Parameters", "Inner Parameters element missing")
+
+        # Both Parameter children must be present with the correct attributes
+        param_elems = inner_params.getChildren()
+        self.assertEqual(len(param_elems), 2)
+        self.assertEqual(param_elems[0].name, "Parameter")
+        self.assertEqual(param_elems[0].get("Name"), "a")
+        self.assertEqual(param_elems[0].get("Value"), "b")
+        self.assertEqual(param_elems[1].name, "Parameter")
+        self.assertEqual(param_elems[1].get("Name"), "c")
+        self.assertEqual(param_elems[1].get("Value"), "d")
+
+    def test_parameters_none_omits_parameters_block(self):
+        ctx = self._make_context()
+        AddParametersPlugin(None).marshalled(ctx)
+
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
+        self.assertEqual(get_result.getChildren(), [], "Parameters element should not be present when parameters=None")
+
+    def test_parameters_empty_dict_omits_parameters_block(self):
+        ctx = self._make_context()
+        AddParametersPlugin({}).marshalled(ctx)
+
+        body = ctx.envelope.getChild("Body")
+        get_result = body[0]
+        self.assertEqual(get_result.getChildren(), [], "Parameters element should not be present when parameters={}")
 
 
 if __name__ == "__main__":
