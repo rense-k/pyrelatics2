@@ -34,7 +34,7 @@ class BaseResult:  # pylint: disable=R0903
         if suds_response is None:
             self.has_error = True
             self.error_msg = ""
-            log.warning("Empty response received from the export request. This indicates an undefined error.")
+            log.warning("Empty response received from the request. This indicates an undefined error.")
 
         # elif suds_response.Export._Error:
         if hasattr(suds_response, "Export"):
@@ -43,7 +43,7 @@ class BaseResult:  # pylint: disable=R0903
                 self.error_msg = str(suds_response.Export._Error)  # pylint: disable=W0212
             else:
                 self.error_msg = ""
-            log.warning("Received an error response from the import request: %s", self.error_msg)
+            log.warning("Received an error response from the export request: %s", self.error_msg)
 
 
 # pylint: disable=W0212

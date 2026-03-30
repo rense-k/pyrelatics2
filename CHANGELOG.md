@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Export errors are now logged at level "warning" instead of "info" (fixes #28).
 - When using multiple paths in `suds_get` (or `suds_get_as_list` or `suds_get_as_str`), now just pass them as extra
-  argument instead of creating a list (fixes #29).
+  arguments instead of creating a list (fixes #29).
 
 ### Internal
 
