@@ -10,8 +10,10 @@ from parameterized import parameterized
 from suds.plugin import MessageContext
 from suds.sax.element import Element
 
-from pyrelatics2.client import (USER_AGENT, AddParametersPlugin,
-                                RelaticsWebservices, is_valid_uuid)
+from pyrelatics2.client import USER_AGENT
+from pyrelatics2.client import AddParametersPlugin
+from pyrelatics2.client import RelaticsWebservices
+from pyrelatics2.client import is_valid_uuid
 
 # pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,too-few-public-methods
 
