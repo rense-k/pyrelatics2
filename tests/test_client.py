@@ -13,9 +13,6 @@ from pyrelatics2.client import USER_AGENT
 from pyrelatics2.client import AddParametersPlugin
 from pyrelatics2.client import RelaticsWebservices
 
-# from parameterized import parameterized
-
-
 # pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,too-few-public-methods
 
 

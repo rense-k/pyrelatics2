@@ -43,7 +43,7 @@ class BaseResult:  # pylint: disable=R0903
                 self.error_msg = str(suds_response.Export._Error)  # pylint: disable=W0212
             else:
                 self.error_msg = ""
-            log.info("Received an error response from the import request: %s", self.error_msg)
+            log.warning("Received an error response from the import request: %s", self.error_msg)
 
 
 # pylint: disable=W0212
