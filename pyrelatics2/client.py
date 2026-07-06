@@ -54,7 +54,7 @@ SUPPORTED_EXTENSIONS = ["xlsx", "xlsm", "xlsb", "xls", "csv"]
 USER_AGENT = (
     f"PyRelatics2/{__version__} "
     f"({platform()}; {machine()}; python-{python_version()}) "
-    f"{os.path.split(sys.modules['__main__'].__file__)[1]}"  # pylint: disable=E1101
+    f"{os.path.split(sys.modules['__main__'].__file__)[1] if hasattr(sys.modules['__main__'], '__file__') else '...'}"
 )
 
 

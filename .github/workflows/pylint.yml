@@ -5,6 +5,8 @@ on:
     paths:
       - "**.py"
       - "**.yml"
+  pull_request:
+    branches: ["**"]
 
 permissions:
   contents: read
