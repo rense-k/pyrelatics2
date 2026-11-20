@@ -28,7 +28,7 @@ jobs:
           cache: "pip" # caching pip dependencies
       - name: Install dependencies
         run: |
-          pip install -e .[dev]
+          pip install -e .[dev,test]
       - name: Analyzing the code with pylint
         run: |
           pylint $(git ls-files '*.py')
