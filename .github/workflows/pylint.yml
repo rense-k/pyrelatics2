@@ -23,6 +23,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python
+        id: python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version-file: "pyproject.toml"
@@ -32,8 +33,12 @@ jobs:
           version: "0.13.9"
           require-checksums: true
       - name: Install dependencies
+        env:
+          UV_PYTHON: ${{ steps.python.outputs.python-path }}
         run: |
-          uv sync --locked --python "$(command -v python)" --group lint --no-install-project --no-build
+          uv sync --locked --group lint --no-install-project --no-build
       - name: Analyzing the code with pylint
+        env:
+          UV_PYTHON: ${{ steps.python.outputs.python-path }}
         run: |
           uv run --no-sync python -m pylint $(git ls-files '*.py')
