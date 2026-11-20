@@ -5,6 +5,8 @@ on:
     paths:
       - "**.py"
       - "**.yml"
+      - "pyproject.toml"
+      - "uv.lock"
   pull_request:
     branches: ["**"]
 
@@ -26,10 +28,14 @@ jobs:
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip" # caching pip dependencies
+      - name: Install uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          version: "0.13.9"
+          require-checksums: true
       - name: Install dependencies
         run: |
-          pip install --group lint .
+          uv sync --locked --python "$(command -v python)" --group lint --no-install-project --no-build
       - name: Analyzing the code with pylint
         run: |
-          pylint $(git ls-files '*.py')
+          uv run --no-sync python -m pylint $(git ls-files '*.py')
