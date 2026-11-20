@@ -12,7 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  lint:
+    name: Lint against ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
