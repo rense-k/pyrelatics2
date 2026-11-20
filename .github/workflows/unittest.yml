@@ -34,7 +34,7 @@ jobs:
           cache: "pip" # caching pip dependencies
       - name: Install dependencies
         run: |
-          pip install -e .[test]
+          pip install --only-deps .[test]
       - name: Run unittests
         # run: |
         #   python $(git ls-files 'tests/*.py')
