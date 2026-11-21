@@ -191,6 +191,9 @@ To install this package for development, use this command in your venv:
 pip install -e ".[dev]"
 ```
 
+CI installs dependencies from `uv.lock`. After changing dependency declarations, run `uv lock` and include the updated
+lockfile in the same change. Dependabot proposes updates to the lockfile and GitHub Actions.
+
 [pypi-package]: https://pypi.org/project/pyrelatics2/
 [pypi-version-badge]: https://img.shields.io/pypi/v/pyrelatics2?label=pypi%20package
 [pypi-status-badge]: https://img.shields.io/pypi/status/pyrelatics2

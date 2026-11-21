@@ -49,8 +49,13 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev  = ["black>=26.10.1", "isort", "pylint>=4.0.9", "wheel>=0.46.3", "twine", "zizmor"]
-test = ["parameterized"]
+dev = ["black>=26.10.1", "isort>=9.0.0", "pylint>=4.0.9", "zizmor>=1.32.0", "parameterized>=0.9.0"]
+
+# Dev tooling (PEP 735 groups): not shipped, so it lives here rather than in project.optional-dependencies.
+[dependency-groups]
+test  = ["parameterized>=0.9.0"]
+lint  = ["pylint>=4.0.9", { include-group = "test" }]
+build = ["build>=1.6.1", "setuptools"]
 
 [project.urls]
 Homepage = "https://github.com/rense-k/pyrelatics2"
@@ -61,3 +66,8 @@ Changelog  = "https://github.com/rense-k/pyrelatics2/blob/dev/CHANGELOG.md"
 
 [tool.setuptools.dynamic]
 version = { attr = "pyrelatics2.version.__version__" }
+
+# Resolve only releases at least 7 days old: a compromised release is usually
+# found and yanked within days, before uv lock could pick it up.
+[tool.uv]
+exclude-newer = "7 days"

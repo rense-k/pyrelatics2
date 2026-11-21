@@ -7,6 +7,8 @@ on:
     paths:
       - "**.py"
       - "**.yml"
+      - "pyproject.toml"
+      - "uv.lock"
   pull_request:
     branches: ["**"]
 
@@ -22,6 +24,8 @@ jobs:
         python-version: ["pypy3.11", "3.11", "3.12", "3.13", "3.14", "3.15"]
     name: Test against ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -31,12 +35,14 @@ jobs:
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip" # caching pip dependencies
+      - name: Install uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          version: "0.13.9"
+          require-checksums: true
       - name: Install dependencies
         run: |
-          pip install --only-deps .[test]
+          uv sync --locked --group test --no-install-project --no-build
       - name: Run unittests
-        # run: |
-        #   python $(git ls-files 'tests/*.py')
         run: |
-          python -m unittest discover tests
+          uv run --no-sync python -m unittest discover tests
