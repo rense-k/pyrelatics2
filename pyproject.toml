@@ -66,3 +66,8 @@ Changelog  = "https://github.com/rense-k/pyrelatics2/blob/dev/CHANGELOG.md"
 
 [tool.setuptools.dynamic]
 version = { attr = "pyrelatics2.version.__version__" }
+
+# Resolve only releases at least 7 days old: a compromised release is usually
+# found and yanked within days, before uv lock could pick it up.
+[tool.uv]
+exclude-newer = "7 days"
