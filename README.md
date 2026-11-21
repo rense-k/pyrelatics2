@@ -1,6 +1,6 @@
 # PyRelatics2
 
-[![PyPI Python version][pypi-python-version-badge]][pypi-package] [![PyPI version][pypi-version-badge]][pypi-package] [![PyPI status][pypi-status-badge]][pypi-package] [![Apache-2.0 license][license-badge]][license] [![GitHub branch check state][github-workflow-status-pylint-dev-badge]][github-link] [![GitHub branch check state][github-workflow-status-unittest-dev-badge]][github-link] [![OpenSSF Baseline][openssf-badge]][openssf-link]
+[![PyPI Python version][pypi-python-version-badge]][pypi-package] [![PyPI version][pypi-version-badge]][pypi-package] [![PyPI status][pypi-status-badge]][pypi-package] [![Apache-2.0 license][license-badge]][license] [![GitHub branch check state][github-workflow-status-pylint-dev-badge]][github-link] [![GitHub branch check state][github-workflow-status-unittest-dev-badge]][github-link] [![OpenSSF Baseline][openssf-best-practises-badge]][openssf-best-practises-link] [![OpenSSF Scorecard][openssf-scorecard-badge]][openssf-scorecard-link]
 
 Python package to interact with Relatics v5 webservices.
 
@@ -200,6 +200,7 @@ pip install -e ".[dev]"
 [github-workflow-status-unittest-dev-badge]: https://img.shields.io/github/actions/workflow/status/rense-k/pyrelatics2/unittest.yml?branch=dev&label=unittests%20%40dev
 [license]: ./LICENSE
 [license-badge]: https://img.shields.io/pypi/l/pyrelatics2?color=informational
-[openssf-badge]: https://www.bestpractices.dev/projects/16950/baseline
-[openssf-link]: https://www.bestpractices.dev/projects/16950
-
+[openssf-best-practises-badge]: https://www.bestpractices.dev/projects/16950/baseline
+[openssf-best-practises-link]: https://www.bestpractices.dev/projects/16950
+[openssf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/rense-k/pyrelatics2/badge
+[openssf-scorecard-link]: https://scorecard.dev/viewer/?uri=github.com/rense-k/pyrelatics2
